@@ -1,0 +1,7 @@
+2019-11-22 10:35:11 [SeleDemos.log4j_demo] (main:) # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+2019-11-22 10:35:11 [SeleDemos.log4j_demo] (main:) TEST Has Started
+2019-11-22 10:35:21 [SeleDemos.log4j_demo] (main:) Open cms freestyle website
+2019-11-22 10:35:21 [SeleDemos.log4j_demo] (main:) get username
+2019-11-22 10:35:23 [SeleDemos.log4j_demo] (main:) get password
+2019-11-22 10:35:36 [SeleDemos.log4j_demo] (main:) click on submit
+2019-11-22 10:35:38 [SeleDemos.log4j_demo] (main:) success!!!!

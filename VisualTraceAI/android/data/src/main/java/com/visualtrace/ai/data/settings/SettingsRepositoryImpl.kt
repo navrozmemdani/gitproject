@@ -41,6 +41,7 @@ class SettingsRepositoryImpl @Inject constructor(
         val CONSENT_ANSWERED = booleanPreferencesKey("consent_answered")
         val FULL_VIDEO = booleanPreferencesKey("full_video_upload_consent")
         val GUEST = booleanPreferencesKey("guest_mode")
+        val SERVER_URL = stringPreferencesKey("server_url")
         val GUEST_ID = stringPreferencesKey("guest_id")
     }
 
@@ -61,6 +62,7 @@ class SettingsRepositoryImpl @Inject constructor(
                 consentPromptAnswered = p[Keys.CONSENT_ANSWERED] ?: false,
                 fullVideoUploadConsent = p[Keys.FULL_VIDEO] ?: false,
                 guestModeChosen = p[Keys.GUEST] ?: false,
+                serverUrl = p[Keys.SERVER_URL] ?: "",
             )
         }
 
@@ -94,6 +96,7 @@ class SettingsRepositoryImpl @Inject constructor(
 
     override suspend fun setFullVideoUploadConsent(granted: Boolean) { store.edit { it[Keys.FULL_VIDEO] = granted } }
     override suspend fun setGuestModeChosen(chosen: Boolean) { store.edit { it[Keys.GUEST] = chosen } }
+    override suspend fun setServerUrl(url: String) { store.edit { it[Keys.SERVER_URL] = url.trim() } }
 
     override suspend fun guestId(): String {
         store.data.first()[Keys.GUEST_ID]?.let { return it }

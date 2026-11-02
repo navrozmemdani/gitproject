@@ -72,6 +72,7 @@ interface SettingsRepository {
     suspend fun setThirdPartyConsent(granted: Boolean)
     suspend fun setFullVideoUploadConsent(granted: Boolean)
     suspend fun setGuestModeChosen(chosen: Boolean)
+    suspend fun setServerUrl(url: String)
     suspend fun guestId(): String
 }
 

@@ -55,11 +55,17 @@ import javax.inject.Singleton
 object DataProvidesModule {
 
     @Provides @Singleton
-    fun okHttp(config: ApiConfig, identity: IdentityInterceptor, authenticator: TokenRefreshAuthenticator): OkHttpClient =
+    fun okHttp(
+        config: ApiConfig,
+        server: com.visualtrace.ai.data.remote.ServerUrlInterceptor,
+        identity: IdentityInterceptor,
+        authenticator: TokenRefreshAuthenticator,
+    ): OkHttpClient =
         OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(60, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS)
+            .addInterceptor(server)
             .addInterceptor(identity)
             .authenticator(authenticator)
             .apply {

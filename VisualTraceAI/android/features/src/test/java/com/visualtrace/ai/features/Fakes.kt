@@ -31,6 +31,7 @@ class FakeSettings(initial: AppSettings = AppSettings()) : SettingsRepository {
     override suspend fun setThirdPartyConsent(granted: Boolean) = state.update { it.copy(thirdPartyConsent = granted, consentPromptAnswered = true) }
     override suspend fun setFullVideoUploadConsent(granted: Boolean) = state.update { it.copy(fullVideoUploadConsent = granted) }
     override suspend fun setGuestModeChosen(chosen: Boolean) = state.update { it.copy(guestModeChosen = chosen) }
+    override suspend fun setServerUrl(url: String) = state.update { it.copy(serverUrl = url) }
     override suspend fun guestId(): String = "guest"
 }
 

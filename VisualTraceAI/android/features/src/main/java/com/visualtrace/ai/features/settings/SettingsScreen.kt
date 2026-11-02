@@ -129,6 +129,9 @@ fun SettingsScreen(
                     NavRow(Icons.Outlined.PrivacyTip, stringResource(R.string.privacy_policy)) { onOpenLegal("privacy") }
                     NavRow(Icons.Outlined.Description, stringResource(R.string.terms)) { onOpenLegal("terms") }
                 }
+                Group(stringResource(R.string.server)) {
+                    ServerUrlEditor(s.serverUrl, viewModel::setServerUrl)
+                }
                 Group(stringResource(R.string.account)) {
                     NavRow(Icons.Outlined.Person, stringResource(R.string.profile_title), onOpenProfile)
                 }
@@ -243,6 +246,37 @@ fun ProviderSettingsScreen(viewModel: SettingsViewModel, onBack: () -> Unit) {
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ServerUrlEditor(current: String, onSave: (String) -> Boolean) {
+    var text by rememberSaveable(current) { mutableStateOf(current) }
+    var invalid by rememberSaveable { mutableStateOf(false) }
+    var saved by rememberSaveable { mutableStateOf(false) }
+    Column(Modifier.padding(horizontal = 4.dp)) {
+        Text(stringResource(R.string.server_body), style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant)
+        androidx.compose.material3.OutlinedTextField(
+            value = text,
+            onValueChange = { text = it.take(200); invalid = false; saved = false },
+            label = { Text(stringResource(R.string.server_address)) },
+            placeholder = { Text("http://192.168.1.20:8000") },
+            singleLine = true,
+            isError = invalid,
+            supportingText = {
+                Text(stringResource(when {
+                    invalid -> R.string.server_invalid
+                    saved -> R.string.server_saved
+                    else -> R.string.server_default_hint
+                }))
+            },
+            modifier = Modifier.fillMaxWidth(),
+        )
+        androidx.compose.foundation.layout.Row {
+            TextButton(onClick = { val ok = onSave(text); invalid = !ok; saved = ok }) { Text(stringResource(R.string.save)) }
+            TextButton(onClick = { text = ""; onSave(""); invalid = false; saved = true }) { Text(stringResource(R.string.server_reset)) }
         }
     }
 }

@@ -56,6 +56,17 @@ class SettingsViewModel @Inject constructor(
     fun setConsent(e: Boolean) = viewModelScope.launch { repo.setThirdPartyConsent(e) }
     fun setFullVideoConsent(e: Boolean) = viewModelScope.launch { repo.setFullVideoUploadConsent(e) }
 
+    /** Returns false when the address is not a valid http(s) URL. Blank resets to the built-in server. */
+    fun setServerUrl(raw: String): Boolean {
+        val trimmed = raw.trim()
+        if (trimmed.isNotEmpty() && com.visualtrace.ai.data.remote.ServerUrlInterceptor.parseServerUrl(trimmed) == null) return false
+        viewModelScope.launch {
+            repo.setServerUrl(trimmed)
+            loadProviders(force = true)
+        }
+        return true
+    }
+
     fun setProviderEnabled(key: String, enabled: Boolean) = viewModelScope.launch {
         val defaults = catalog.value?.providers?.filter { it.enabledByDefault }?.map { it.key }?.toSet() ?: emptySet()
         repo.setProviderEnabled(key, enabled, defaults)

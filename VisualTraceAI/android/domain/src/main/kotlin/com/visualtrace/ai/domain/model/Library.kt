@@ -69,6 +69,8 @@ data class AppSettings(
     val consentPromptAnswered: Boolean = false,
     val fullVideoUploadConsent: Boolean = false,
     val guestModeChosen: Boolean = false,
+    /** Overrides the build-time backend URL when set (e.g. http://192.168.1.20:8000/). */
+    val serverUrl: String = "",
 ) {
     companion object {
         const val MIN_FRAME_INTERVAL = 0.5f

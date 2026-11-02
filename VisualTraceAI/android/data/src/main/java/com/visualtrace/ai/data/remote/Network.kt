@@ -2,9 +2,11 @@ package com.visualtrace.ai.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.visualtrace.ai.domain.repository.SettingsRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import okhttp3.Authenticator
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -64,5 +66,32 @@ class TokenRefreshAuthenticator @Inject constructor(private val tokens: TokenPro
             .header("Authorization", "Bearer $fresh")
             .header("X-Token-Refreshed", "1")
             .build()
+    }
+}
+
+/**
+ * Redirects API calls to the server address chosen in Settings, so one APK can talk to a
+ * backend on a laptop (same Wi-Fi), a test server or production without rebuilding.
+ */
+class ServerUrlInterceptor @Inject constructor(private val settings: SettingsRepository) : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val override = runBlocking { settings.settings.first().serverUrl }
+        val target = parseServerUrl(override) ?: return chain.proceed(chain.request())
+        val original = chain.request().url
+        val prefix = target.encodedPath.trimEnd('/')
+        val url = original.newBuilder()
+            .scheme(target.scheme).host(target.host).port(target.port)
+            .encodedPath(prefix + original.encodedPath)
+            .build()
+        return chain.proceed(chain.request().newBuilder().url(url).build())
+    }
+
+    companion object {
+        fun parseServerUrl(raw: String?): okhttp3.HttpUrl? {
+            val trimmed = raw?.trim().orEmpty()
+            if (trimmed.isEmpty()) return null
+            val withScheme = if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) trimmed else "http://$trimmed"
+            return withScheme.toHttpUrlOrNull()
+        }
     }
 }

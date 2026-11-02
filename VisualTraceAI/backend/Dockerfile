@@ -12,4 +12,4 @@ COPY . .
 RUN useradd --system --uid 10001 app && mkdir -p /srv/tmp && chown -R app /srv/tmp
 USER app
 EXPOSE 8000
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000 --proxy-headers --workers 1"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:create_app --factory --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips=* --workers 1"]

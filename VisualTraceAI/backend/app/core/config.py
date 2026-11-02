@@ -102,6 +102,16 @@ class Settings(BaseSettings):
     wikimedia_enabled: bool = True
     http_user_agent: str = "VisualTraceAI/1.0 (+https://visualtrace.ai/bot; contact@visualtrace.ai)"
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _async_driver(cls, value):  # noqa: ANN001
+        """Hosting providers (Render, Heroku, Railway) hand out postgres:// URLs; use asyncpg."""
+        if isinstance(value, str):
+            for prefix in ("postgres://", "postgresql://"):
+                if value.startswith(prefix):
+                    return "postgresql+asyncpg://" + value[len(prefix):]
+        return value
+
     @field_validator("cors_origins", "client_api_keys", mode="before")
     @classmethod
     def _split_csv(cls, value):  # noqa: ANN001

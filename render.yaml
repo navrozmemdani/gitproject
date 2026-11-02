@@ -1,0 +1,40 @@
+# Render Blueprint: free test deployment of the VisualTrace AI backend + PostgreSQL.
+# Render dashboard -> New -> Blueprint -> select this repository.
+# This is a TEST setup: providers without API keys return results labelled MOCK.
+services:
+  - type: web
+    name: visualtrace-api
+    runtime: docker
+    plan: free
+    branch: ccr-86db432a-xqot6y
+    rootDir: VisualTraceAI/backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: visualtrace-db
+          property: connectionString
+      - key: ENVIRONMENT
+        value: development
+      - key: PROVIDER_MOCK_MODE
+        value: "true"
+      - key: ALLOW_GUEST
+        value: "true"
+      - key: AUTH_DEV_TOKENS
+        value: "false"
+      - key: SIGNED_URL_SECRET
+        generateValue: true
+      - key: EMBEDDING_BACKEND
+        value: opencv
+      - key: OCR_ENABLED
+        value: "false"
+      # Add real provider keys later in the Render dashboard (Environment tab), e.g.
+      # GOOGLE_CSE_API_KEY / GOOGLE_CSE_CX, TINEYE_API_KEY, SERPAPI_API_KEY + PUBLIC_BASE_URL.
+
+databases:
+  - name: visualtrace-db
+    plan: free
+    databaseName: visualtrace
+    user: visualtrace

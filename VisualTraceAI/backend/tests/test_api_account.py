@@ -135,3 +135,10 @@ def test_signed_temp_urls(tmp_path):
     assert st.verify(token[:-2] + "aa") is None
     assert st.resolve("../etc/passwd") is None
     assert st.sign(p.name, ttl_seconds=-1) and st.verify(st.sign(p.name, ttl_seconds=-1)) is None
+
+
+def test_hosting_database_urls_use_asyncpg():
+    s = Settings(_env_file=None, database_url="postgres://u:p@host:5432/db")
+    assert s.database_url == "postgresql+asyncpg://u:p@host:5432/db"
+    s = Settings(_env_file=None, database_url="postgresql://u:p@host/db")
+    assert s.database_url.startswith("postgresql+asyncpg://")

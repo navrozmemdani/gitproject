@@ -7,6 +7,14 @@
 - Optional: `tesseract-ocr` (OCR) and the ML extras (`requirements-ml.txt`, PyTorch + OpenCLIP) for semantic analysis and CLIP embeddings. Allow ~2 GB RAM per worker with CLIP.
 - Optional: ClamAV `clamd` for malware scanning (`CLAMAV_HOST`).
 
+### Render (free test deployment, no computer needed)
+`render.yaml` at the repository root describes the backend web service and a PostgreSQL database.
+1. Sign in at https://dashboard.render.com with GitHub.
+2. **New → Blueprint**, pick this repository, then **Apply**. Render builds the Docker image and creates the database (about 5–10 minutes).
+3. Copy the service URL (e.g. `https://visualtrace-api.onrender.com`) and enter it in the app under **Settings → Server**.
+
+The blueprint runs in test mode (`PROVIDER_MOCK_MODE=true`): providers without API keys return results labelled MOCK. Add real keys in the service's **Environment** tab and set `PROVIDER_MOCK_MODE=false` when ready. Free instances sleep after 15 minutes without traffic, so the first request after a pause can take about a minute, and Render's free PostgreSQL databases expire after 30 days.
+
 ### Docker Compose (single host)
 ```bash
 cd backend

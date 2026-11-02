@@ -8,6 +8,10 @@ android {
     namespace = "com.visualtrace.ai.core"
     compileSdk = 36
     defaultConfig { minSdk = 26 }
+    lint {
+        textReport = true
+        textOutput = file("stdout")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

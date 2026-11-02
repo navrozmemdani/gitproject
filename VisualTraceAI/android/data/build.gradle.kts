@@ -14,6 +14,10 @@ android {
         minSdk = 26
         consumerProguardFiles("consumer-rules.pro")
     }
+    lint {
+        textReport = true
+        textOutput = file("stdout")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

@@ -17,6 +17,12 @@ android {
     }
     buildFeatures { compose = true }
     testOptions { unitTests.isIncludeAndroidResources = true }
+    lint {
+        // es/fr/de/hi translate the primary UI; remaining strings intentionally fall back to English.
+        disable += setOf("MissingTranslation")
+        textReport = true
+        textOutput = file("stdout")
+    }
 }
 
 kotlin { jvmToolchain(17) }

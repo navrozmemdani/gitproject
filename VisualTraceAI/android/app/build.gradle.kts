@@ -95,6 +95,8 @@ android {
         disable += setOf("MissingTranslation")
         abortOnError = true
         checkReleaseBuilds = true
+        textReport = true
+        textOutput = file("stdout")
     }
     testOptions { unitTests.isIncludeAndroidResources = true }
 }

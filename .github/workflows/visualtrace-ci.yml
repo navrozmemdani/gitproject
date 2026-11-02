@@ -54,6 +54,8 @@ jobs:
   android:
     name: Android build, tests, APK & AAB
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 60
     defaults:
       run:
@@ -99,6 +101,20 @@ jobs:
         run: |
           echo "Release signing: $SIGNING_KIND"
           find app/build/outputs -name "*.apk" -o -name "*.aab" | xargs ls -la
+      - name: Publish APKs to the "latest-build" GitHub Release (direct phone download)
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/VisualTraceAI-debug.apk
+          cp app/build/outputs/apk/release/app-release.apk dist/VisualTraceAI-release.apk
+          cp app/build/outputs/bundle/release/app-release.aab dist/VisualTraceAI-release.aab
+          NOTES="Automated test build of ${GITHUB_SHA::7} (${GITHUB_REF_NAME}). Install VisualTraceAI-debug.apk and set your backend address in Settings > Server. Release signing: ${SIGNING_KIND} (test only, not for Google Play)."
+          gh release view latest-build >/dev/null 2>&1 || \
+            gh release create latest-build --prerelease --target "$GITHUB_SHA" --title "VisualTrace AI - latest build" --notes "$NOTES"
+          gh release edit latest-build --notes "$NOTES" --prerelease
+          gh release upload latest-build dist/* --clobber
       - uses: actions/upload-artifact@v4
         with:
           name: visualtrace-apks

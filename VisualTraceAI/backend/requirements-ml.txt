@@ -1,0 +1,6 @@
+# Optional: semantic AI analysis (CLIP embeddings + zero-shot object/clothing/scene labels) and OCR.
+# Without these the backend uses the OpenCV global descriptor and reports semantic sections as "unavailable".
+-r requirements.txt
+torch>=2.5
+open_clip_torch>=2.29
+pytesseract>=0.3.13   # also requires the `tesseract-ocr` system package

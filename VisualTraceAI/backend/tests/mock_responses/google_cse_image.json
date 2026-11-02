@@ -1,0 +1,10 @@
+{"items": [
+  {"title": "Red sports car at sunset - Auto Blog", "link": "https://img.autoblog.test/red-car.jpg", "snippet": "A red sports car photographed at sunset.",
+   "image": {"contextLink": "https://autoblog.test/posts/red-car?utm_source=x", "thumbnailLink": "https://img.autoblog.test/thumb/red-car.jpg"}},
+  {"title": "Car wallpaper (resized)", "link": "https://wallpapers.test/car-small.jpg", "snippet": "Wallpaper",
+   "image": {"contextLink": "https://wallpapers.test/car", "thumbnailLink": "https://wallpapers.test/thumb/car-small.jpg"}},
+  {"title": "Green abstract lines", "link": "https://art.test/green.jpg", "snippet": "Abstract art",
+   "image": {"contextLink": "https://art.test/green", "thumbnailLink": "https://art.test/thumb/green.jpg"}},
+  {"title": "Same car on Instagram", "link": "https://cdn.instagram.test/p1.jpg", "snippet": "post",
+   "image": {"contextLink": "https://www.instagram.com/p/ABC123/", "thumbnailLink": "https://img.autoblog.test/thumb/cropped.jpg"}}
+]}

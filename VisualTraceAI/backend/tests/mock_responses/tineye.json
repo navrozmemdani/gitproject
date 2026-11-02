@@ -1,0 +1,4 @@
+{"results": {"matches": [
+  {"image_url": "https://img.tineye.test/match1.jpg", "domain": "news.example-times.test", "score": 98.5,
+   "backlinks": [{"url": "https://news.example-times.test/img/car.jpg", "backlink": "https://news.example-times.test/2026/car-story", "crawl_date": "2026-05-01"}]}
+]}}

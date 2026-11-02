@@ -1,0 +1,7 @@
+{"data": {"children": [
+  {"data": {"title": "Saw this red car today", "permalink": "/r/cars/comments/abc/saw_this/", "url": "https://i.redd.test/red.jpg",
+            "post_hint": "image", "subreddit": "cars", "author": "car_spotter", "created_utc": 1767225600,
+            "preview": {"images": [{"source": {"url": "https://preview.redd.test/red.jpg?width=640&amp;s=1"}}]}}},
+  {"data": {"title": "Text only post", "permalink": "/r/cars/comments/def/text/", "url": "https://www.reddit.com/r/cars/comments/def/text/",
+            "subreddit": "cars", "author": "[deleted]", "created_utc": 1767225600}}
+]}}

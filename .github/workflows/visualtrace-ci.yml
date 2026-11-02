@@ -92,7 +92,7 @@ jobs:
       - name: Unit & UI (Robolectric) tests
         run: ./gradlew --stacktrace :domain:test testDebugUnitTest
       - name: Lint
-        run: ./gradlew lintDebug
+        run: ./gradlew --continue lintDebug
       - name: Build debug APK, release APK, release AAB and instrumentation APK
         run: ./gradlew assembleDebug assembleRelease bundleRelease assembleDebugAndroidTest
       - name: Show outputs

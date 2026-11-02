@@ -1,0 +1,25 @@
+# Terms and Conditions
+Last updated: November 2026
+
+## Acceptable use
+- Only search images and videos you have the right to use.
+- Do not use VisualTrace AI to stalk, harass, identify or track people, or to collect personal data about individuals.
+- Do not attempt to circumvent rate limits, security controls or platform restrictions.
+
+## Search results
+- Results come from third-party sources and public indexes. We do not control their content or availability.
+- Similarity scores are automated visual estimates. They are not proof of identity, ownership, authorship or origin.
+- Profile and publication information is shown only when returned by an authorised source, and may be incomplete or outdated.
+- Results marked MOCK are synthetic data produced in development builds and are not real search results.
+
+## Third-party services
+Use of results is subject to the terms of the websites and platforms they link to. Provider availability depends on their APIs and on the server configuration.
+
+## Accounts
+You are responsible for keeping your account credentials secure. You may delete your server data at any time.
+
+## Disclaimer
+The service is provided "as is" without warranties of any kind. To the extent permitted by law we are not liable for decisions made on the basis of search results.
+
+## Changes
+We may update these terms; continued use after an update means you accept the new terms.

@@ -1,0 +1,16 @@
+{"search_id":"0b0b5f7e-6c0a-4f0e-9a51-1f3c1c1b0a01","status":"completed","total":2,"page":1,"page_size":50,
+ "filter":"all","sort":"similarity","counts":{"all":2,"exact":1,"similar":0,"social":1,"websites":1,"news":0},
+ "items":[
+  {"id":"r1","search_id":"0b0b5f7e-6c0a-4f0e-9a51-1f3c1c1b0a01","provider_key":"google_cse","also_found_by":["google_cse","openverse"],
+   "platform":"autoblog.test","category":"website","match_type":"exact","source_url":"https://autoblog.test/posts/red-car",
+   "image_url":"https://img.autoblog.test/red-car.jpg","thumbnail_url":"https://img.autoblog.test/thumb/red-car.jpg",
+   "page_title":"Red sports car","description":"A red sports car","similarity_score":0.97,"similarity_method":"clip+phash+orb",
+   "hash_distance":1,"published_at":null,"author_display_name":null,"author_username":null,"profile_url":null,"profile_bio":null,
+   "website_url":null,"caption":null,"frame_timestamp_ms":null,
+   "field_provenance":{"page_title":"provider","description":"provider","similarity_score":"measured","category":"inferred","via":"Google Programmable Search"},
+   "relevance_rank":0,"is_mock":false,"created_at":"2026-11-02T05:12:36Z"},
+  {"id":"r2","search_id":"0b0b5f7e-6c0a-4f0e-9a51-1f3c1c1b0a01","provider_key":"reddit","platform":"Reddit","category":"social","match_type":"cropped",
+   "source_url":"https://www.reddit.com/r/cars/comments/abc/","similarity_score":0.76,"published_at":"2026-01-01T00:00:00Z",
+   "author_username":"car_spotter","profile_url":"https://www.reddit.com/user/car_spotter","frame_timestamp_ms":3000,
+   "field_provenance":{"author_username":"provider","profile_bio":"unavailable"},"relevance_rank":0,"is_mock":true,"created_at":"2026-11-02T05:12:36Z"}
+ ]}

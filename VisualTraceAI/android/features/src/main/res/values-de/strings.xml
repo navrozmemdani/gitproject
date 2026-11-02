@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_home">Start</string>
+    <string name="nav_history">Verlauf</string>
+    <string name="nav_saved">Gespeichert</string>
+    <string name="nav_profile">Profil</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="home_heading">Entdecke alles – visuell.</string>
+    <string name="upload_image">Bild hochladen</string>
+    <string name="upload_video">Video hochladen</string>
+    <string name="open_camera">Kamera öffnen</string>
+    <string name="paste_url">Bild-URL einfügen</string>
+    <string name="search">Suchen</string>
+    <string name="recent_searches">Letzte Suchen</string>
+    <string name="saved_results">Gespeicherte Ergebnisse</string>
+    <string name="results_title">Ergebnisse</string>
+    <string name="settings_title">Einstellungen</string>
+    <string name="retry">Erneut versuchen</string>
+</resources>

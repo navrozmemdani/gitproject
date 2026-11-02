@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Never back up auth state or the guest identifier; local library may be backed up. -->
+    <exclude domain="sharedpref" path="." />
+    <exclude domain="file" path="datastore/settings.preferences_pb" />
+</full-backup-content>

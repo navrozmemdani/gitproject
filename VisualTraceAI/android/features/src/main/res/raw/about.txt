@@ -1,0 +1,17 @@
+# VisualTrace AI
+Version {version}
+
+Discover anything visually. VisualTrace AI finds visually similar images across publicly accessible websites and supported platforms.
+
+## How it works
+- Your image is analysed (dimensions, colours, quality, objects and visible text where available).
+- Perceptual hashes and a visual embedding are computed.
+- Configured providers are searched through official or licensed APIs.
+- Candidate images are compared visually, deduplicated and ranked.
+
+## Honest by design
+- Every result shows which provider found it and how each field was obtained: from the source, measured, inferred, or not available.
+- Providers that are not configured are listed as such; the app never fabricates results.
+
+## Open-source components
+Kotlin, Jetpack Compose, Material 3, Hilt, Retrofit, OkHttp, Room, WorkManager, DataStore, Coil, Media3, Firebase Authentication; backend: FastAPI, PostgreSQL, OpenCV, OpenCLIP.

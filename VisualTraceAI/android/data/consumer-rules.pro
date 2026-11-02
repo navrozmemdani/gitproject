@@ -1,0 +1,1 @@
+-keep class com.visualtrace.ai.data.remote.dto.** { *; }

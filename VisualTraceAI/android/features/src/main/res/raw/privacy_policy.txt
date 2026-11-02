@@ -1,0 +1,38 @@
+# Privacy Policy
+Last updated: November 2026
+
+VisualTrace AI ("we") helps you find visually similar images on public websites. This policy explains what data the app and the VisualTrace backend process, and the controls you have.
+
+## What we process
+- Images and video frames you choose to search. Video frames are extracted on your device; the full video is uploaded only if you explicitly enable it.
+- Before upload, images are re-encoded on your device, which removes embedded metadata such as GPS location.
+- Account data (email, display name) when you sign in with email or Google through Firebase Authentication.
+- A random guest identifier when you continue as a guest.
+- Search history, results and saved items.
+
+## Retention
+- Uploaded images, frames and videos are stored in temporary storage only while a search is processed and are deleted automatically afterwards (at most 15 minutes after upload, even if processing fails).
+- Search history is stored on your device by default. A server copy of each search (results and a small preview thumbnail, if history is enabled) is kept so you can reopen it; you can delete individual searches or all history at any time, and deletions are applied on the server too.
+- Saved results are stored on your device. They are copied to your account only if you enable Cloud sync.
+
+## Third-party search providers
+- Keyword-based providers (e.g. Google Programmable Search, Reddit, Openverse, Wikimedia Commons) receive only text keywords derived from the image analysis or your description.
+- Upload-based reverse-image providers (e.g. TinEye, Google Lens via SerpApi) receive a copy of your image only if you consent. You can change this at any time in Settings > Privacy.
+- We only use official APIs and authorised search services. We never bypass logins, private accounts or CAPTCHAs.
+
+## What we never do
+- We do not perform facial recognition or try to identify people.
+- We do not present similarity as proof that two images show the same person, share an owner or have the same origin.
+- We do not sell personal data.
+
+## Your controls
+- Delete individual searches or clear all history (Settings or History screen).
+- Delete all of your server-side data (Profile > Delete my server data).
+- Turn history saving and cloud sync on or off.
+- Withdraw consent for upload-based providers at any time.
+
+## Security
+All traffic uses HTTPS. Provider API keys are stored only on the server. Uploads are validated, size-limited and optionally scanned for malware.
+
+## Contact
+Questions or requests: use "Contact support" in Settings.

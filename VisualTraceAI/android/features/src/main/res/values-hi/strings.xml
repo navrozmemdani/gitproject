@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_home">होम</string>
+    <string name="nav_history">इतिहास</string>
+    <string name="nav_saved">सहेजे गए</string>
+    <string name="nav_profile">प्रोफ़ाइल</string>
+    <string name="nav_settings">सेटिंग्स</string>
+    <string name="home_heading">सब कुछ दृश्य रूप से खोजें।</string>
+    <string name="upload_image">छवि अपलोड करें</string>
+    <string name="upload_video">वीडियो अपलोड करें</string>
+    <string name="open_camera">कैमरा खोलें</string>
+    <string name="paste_url">छवि URL चिपकाएँ</string>
+    <string name="search">खोजें</string>
+    <string name="recent_searches">हाल की खोजें</string>
+    <string name="saved_results">सहेजे गए परिणाम</string>
+    <string name="results_title">परिणाम</string>
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="retry">पुनः प्रयास करें</string>
+</resources>

@@ -165,7 +165,7 @@ private fun Group(title: String, content: @Composable () -> Unit) {
 private fun ToggleRow(title: String, subtitle: String?, checked: Boolean, onChange: (Boolean) -> Unit) {
     ListItem(
         headlineContent = { Text(title) },
-        supportingContent = subtitle?.let { { Text(it) } },
+        supportingContent = if (subtitle != null) { { Text(subtitle) } } else null,
         trailingContent = { Switch(checked = checked, onCheckedChange = onChange) },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
     )

@@ -154,7 +154,7 @@ fun ResultsScreen(viewModel: ResultsViewModel, onBack: () -> Unit, onOpenTicket:
                     onFilter = viewModel::setFilter,
                     onCharacteristics = viewModel::searchByCharacteristics,
                     onView = { viewing = it },
-                    onSave = { item -> if (item.id in savedIds) viewModel.toggleSave(item, null, null) else saving = item },
+                    onSave = { item -> if (item.id in savedIds) { viewModel.toggleSave(item, null, null) } else { saving = item } },
                     onReport = { reporting = it },
                     onCopied = viewModel::copied,
                 )

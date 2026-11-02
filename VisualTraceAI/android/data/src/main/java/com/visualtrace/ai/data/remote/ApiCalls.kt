@@ -47,7 +47,7 @@ object ErrorMapper {
                 in 500..599 -> AppError.Server("http_$status", null, retryable = true)
                 else -> AppError.Server("http_$status", null, retryable = false)
             }
-            else -> AppError.Server(code, message, retryable = envelope.error.retryable || status >= 500)
+            else -> AppError.Server(code, message, retryable = envelope?.error?.retryable == true || status >= 500)
         }
     }
 

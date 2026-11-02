@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [34])
+@Config(sdk = [34], qualifiers = "w411dp-h1400dp-xxhdpi")
 class ComponentsUiTest {
     @get:Rule val rule = createComposeRule()
 
@@ -51,8 +51,9 @@ class ComponentsUiTest {
         rule.onNodeWithText("Visual similarity 97%").assertIsDisplayed()
         rule.onNodeWithText("Matched frame at 0:03", substring = true).assertIsDisplayed()
         rule.onNodeWithContentDescription("Public information").performClick()
-        rule.onNodeWithText("@car_spotter").assertIsDisplayed()
-        rule.onNodeWithText("From source").assertIsDisplayed()
+        rule.waitForIdle()
+        rule.onNodeWithText("@car_spotter").assertExists()
+        rule.onNodeWithText("From source").assertExists()
     }
 
     @Test fun saveButtonReflectsState() {

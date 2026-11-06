@@ -6,7 +6,11 @@ import { dirname } from "node:path";
 const DATA_FILE = process.env.DATA_FILE || "./data/store.json";
 
 const empty = () => ({
-  // E.164 number -> { sid, provisionedAt }
+  // id -> { id, email, salt, hash, createdAt }
+  users: {},
+  // token -> { userId, createdAt }
+  tokens: {},
+  // E.164 number -> { sid, ownerId, provisionedAt }
   numbers: {},
   // array of { id, to, from, body, receivedAt }
   messages: [],
@@ -37,8 +41,47 @@ function persist() {
 load();
 
 export const store = {
-  addNumber(e164, sid) {
-    state.numbers[e164] = { sid, provisionedAt: new Date().toISOString() };
+  // ---------- users ----------
+  createUser({ email, salt, hash }) {
+    const normalized = email.trim().toLowerCase();
+    const id = `u_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const user = { id, email: normalized, salt, hash, createdAt: new Date().toISOString() };
+    state.users[id] = user;
+    persist();
+    return user;
+  },
+
+  getUserByEmail(email) {
+    const normalized = String(email).trim().toLowerCase();
+    return Object.values(state.users).find((u) => u.email === normalized) || null;
+  },
+
+  getUserById(id) {
+    return state.users[id] || null;
+  },
+
+  // ---------- tokens ----------
+  addToken(token, userId) {
+    state.tokens[token] = { userId, createdAt: new Date().toISOString() };
+    persist();
+  },
+
+  userIdForToken(token) {
+    return state.tokens[token]?.userId || null;
+  },
+
+  removeToken(token) {
+    delete state.tokens[token];
+    persist();
+  },
+
+  // ---------- numbers ----------
+  addNumber(e164, sid, ownerId) {
+    state.numbers[e164] = {
+      sid,
+      ownerId,
+      provisionedAt: new Date().toISOString(),
+    };
     persist();
     return state.numbers[e164];
   },
@@ -48,17 +91,22 @@ export const store = {
     persist();
   },
 
-  listNumbers() {
-    return Object.entries(state.numbers).map(([phoneNumber, meta]) => ({
-      phoneNumber,
-      ...meta,
-    }));
+  getNumber(e164) {
+    return state.numbers[e164] || null;
   },
 
   hasNumber(e164) {
     return Boolean(state.numbers[e164]);
   },
 
+  // Numbers owned by one user (or all when ownerId is omitted).
+  listNumbers(ownerId) {
+    return Object.entries(state.numbers)
+      .filter(([, meta]) => !ownerId || meta.ownerId === ownerId)
+      .map(([phoneNumber, meta]) => ({ phoneNumber, ...meta }));
+  },
+
+  // ---------- messages ----------
   addMessage({ to, from, body }) {
     const msg = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -68,14 +116,23 @@ export const store = {
       receivedAt: new Date().toISOString(),
     };
     state.messages.unshift(msg);
-    // keep the log bounded
     if (state.messages.length > 5000) state.messages.length = 5000;
     persist();
     return msg;
   },
 
-  listMessages(forNumber) {
-    if (!forNumber) return state.messages;
-    return state.messages.filter((m) => m.to === forNumber);
+  // Messages delivered to numbers the given user owns. Optionally narrow to one
+  // number, but only if that user actually owns it.
+  listMessages(ownerId, forNumber) {
+    const owned = new Set(
+      Object.entries(state.numbers)
+        .filter(([, meta]) => meta.ownerId === ownerId)
+        .map(([phoneNumber]) => phoneNumber),
+    );
+    return state.messages.filter((m) => {
+      if (!owned.has(m.to)) return false;
+      if (forNumber && m.to !== forNumber) return false;
+      return true;
+    });
   },
 };

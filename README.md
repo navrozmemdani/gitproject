@@ -22,6 +22,11 @@ temp-number app from account-takeover tooling.
 You must have your own [Twilio](https://www.twilio.com/) account (free trial
 works). Numbers cost money to rent; that is billed by Twilio, not this app.
 
+The backend supports **multiple user accounts** — each account owns its own
+numbers and can only read the SMS delivered to those numbers. Accounts sign in
+from the app and get a bearer token; registration is gated by a shared signup
+key unless you enable open signup.
+
 ## Layout
 
 | Path        | What it is                                                        |

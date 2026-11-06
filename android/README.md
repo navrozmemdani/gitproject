@@ -4,28 +4,30 @@ Kotlin + Jetpack Compose + Retrofit client for the backend in `../backend`.
 
 ## Screens
 
-1. **Settings** — enter the backend URL and API key (`APP_API_KEY`). Stored
-   with DataStore. The app won't do anything until these are set.
+1. **Sign in / Register** — enter the backend URL, email and password. To
+   register you also need the **signup key** (the backend's `APP_API_KEY`),
+   unless the backend has open signup enabled. The issued bearer token is
+   stored with DataStore and reused on next launch.
 2. **Your numbers** — search rentable numbers by area code, rent one, release
-   one, or open its messages.
+   one, or open its messages. Shows only numbers your account owns. Log out
+   from the top bar.
 3. **Messages** — the SMS received on a selected number.
 
 ## Build & run
 
-This module is a standard Gradle/Android project. Open the `android/` folder in
-**Android Studio** (Ladybug or newer) and let it sync, or from the command line
-once a Gradle wrapper is present:
+This module is a standard Gradle/Android project with the Gradle **wrapper
+committed** (`gradlew`, `gradle/wrapper/`). Open the `android/` folder in
+**Android Studio** (Ladybug or newer) and let it sync, or from the command
+line:
 
 ```bash
 cd android
-# If you don't have the wrapper yet, generate it once with a local Gradle 8.9+:
-#   gradle wrapper --gradle-version 8.9
 ./gradlew assembleDebug
 ```
 
-> The Gradle wrapper JAR/scripts are intentionally not committed here. Generate
-> them with the command above (or via Android Studio) so you get a wrapper that
-> matches your Gradle install.
+The first build downloads the Android Gradle Plugin and SDK components from
+Google, so it needs normal internet access and an installed Android SDK
+(Android Studio sets `sdk.dir` in `local.properties` for you).
 
 ## Connecting to a local backend
 

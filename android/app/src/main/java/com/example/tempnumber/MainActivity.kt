@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,9 +56,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MaterialTheme {
-                AppRoot()
-            }
+            MaterialTheme { AppRoot() }
         }
     }
 }
@@ -61,22 +64,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppRoot(vm: MainViewModel = viewModel()) {
     val state by vm.state.collectAsStateWithLifecycle()
-    var showSettings by remember { mutableStateOf(false) }
-
-    // Force the settings screen until configured.
-    LaunchedEffect(state.configured) {
-        if (!state.configured) showSettings = true
-    }
 
     when {
-        showSettings || !state.configured ->
-            SettingsScreen(
+        !state.loggedIn ->
+            AuthScreen(
                 state = state,
-                onSave = { url, key ->
-                    vm.saveSettings(url, key)
-                    showSettings = false
-                },
-                onBack = if (state.configured) ({ showSettings = false }) else null,
+                onLogin = vm::login,
+                onRegister = vm::register,
+                onDismissError = vm::dismissError,
             )
 
         state.selectedNumber != null ->
@@ -90,7 +85,7 @@ fun AppRoot(vm: MainViewModel = viewModel()) {
         else ->
             NumbersScreen(
                 state = state,
-                onOpenSettings = { showSettings = true },
+                onLogout = vm::logout,
                 onRefresh = vm::refreshNumbers,
                 onSearch = vm::searchAvailable,
                 onRent = vm::rent,
@@ -103,35 +98,35 @@ fun AppRoot(vm: MainViewModel = viewModel()) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsScreen(
+private fun AuthScreen(
     state: UiState,
-    onSave: (String, String) -> Unit,
-    onBack: (() -> Unit)?,
+    onLogin: (String, String, String) -> Unit,
+    onRegister: (String, String, String, String) -> Unit,
+    onDismissError: () -> Unit,
 ) {
-    var url by remember(state.settings.baseUrl) { mutableStateOf(state.settings.baseUrl) }
-    var key by remember(state.settings.apiKey) { mutableStateOf(state.settings.apiKey) }
+    val snackbar = remember { SnackbarHostState() }
+    ErrorSnackbar(state.error, snackbar, onDismissError)
+
+    var registerMode by remember { mutableStateOf(false) }
+    var url by remember(state.session.baseUrl) { mutableStateOf(state.session.baseUrl) }
+    var email by remember(state.session.email) { mutableStateOf(state.session.email) }
+    var password by remember { mutableStateOf("") }
+    var signupKey by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Backend settings") },
-                navigationIcon = {
-                    if (onBack != null) {
-                        IconButton(onClick = onBack) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                        }
-                    }
-                },
-            )
-        },
+        topBar = { TopAppBar(title = { Text(if (registerMode) "Create account" else "Sign in") }) },
+        snackbarHost = { SnackbarHost(snackbar) },
     ) { pad ->
         Column(
-            Modifier.padding(pad).padding(16.dp).fillMaxWidth(),
+            Modifier
+                .padding(pad)
+                .padding(16.dp)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                "Point the app at your backend. The API key is the APP_API_KEY " +
-                    "you configured on the server.",
+                "Connect to your Temp Number backend.",
                 style = MaterialTheme.typography.bodyMedium,
             )
             OutlinedTextField(
@@ -142,17 +137,57 @@ private fun SettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
-                value = key,
-                onValueChange = { key = it },
-                label = { Text("API key") },
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
             )
-            Button(
-                onClick = { onSave(url, key) },
-                enabled = url.isNotBlank() && key.isNotBlank(),
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Save") }
+            )
+            if (registerMode) {
+                OutlinedTextField(
+                    value = signupKey,
+                    onValueChange = { signupKey = it },
+                    label = { Text("Signup key") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Text(
+                    "Ask your backend admin for the signup key (APP_API_KEY), " +
+                        "unless open signup is enabled.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+
+            val canSubmit = url.isNotBlank() && email.isNotBlank() &&
+                password.isNotBlank() && (!registerMode || signupKey.isNotBlank())
+
+            Button(
+                onClick = {
+                    if (registerMode) onRegister(url, email, password, signupKey)
+                    else onLogin(url, email, password)
+                },
+                enabled = canSubmit && !state.loading,
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text(if (registerMode) "Create account" else "Sign in") }
+
+            if (state.loading) LinearProgressIndicator(Modifier.fillMaxWidth())
+
+            TextButton(onClick = { registerMode = !registerMode }) {
+                Text(
+                    if (registerMode) "Have an account? Sign in"
+                    else "Need an account? Register",
+                )
+            }
         }
     }
 }
@@ -161,7 +196,7 @@ private fun SettingsScreen(
 @Composable
 private fun NumbersScreen(
     state: UiState,
-    onOpenSettings: () -> Unit,
+    onLogout: () -> Unit,
     onRefresh: () -> Unit,
     onSearch: (String?) -> Unit,
     onRent: (String) -> Unit,
@@ -176,13 +211,13 @@ private fun NumbersScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your numbers") },
+                title = { Text(state.session.email.ifBlank { "Your numbers" }) },
                 actions = {
                     IconButton(onClick = onRefresh) {
                         Icon(Icons.Default.Refresh, contentDescription = "Refresh")
                     }
-                    IconButton(onClick = onOpenSettings) {
-                        Icon(Icons.Default.Settings, contentDescription = "Settings")
+                    IconButton(onClick = onLogout) {
+                        Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Log out")
                     }
                 },
             )
@@ -212,9 +247,7 @@ private fun NumbersScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (state.available.isNotEmpty()) {
-                    item {
-                        Text("Available to rent", style = MaterialTheme.typography.titleMedium)
-                    }
+                    item { Text("Available to rent", style = MaterialTheme.typography.titleMedium) }
                     items(state.available) { n ->
                         Card(Modifier.fillMaxWidth()) {
                             Row(
@@ -224,8 +257,7 @@ private fun NumbersScreen(
                             ) {
                                 Column(Modifier.fillMaxWidth(0.7f)) {
                                     Text(n.phoneNumber, style = MaterialTheme.typography.bodyLarge)
-                                    val loc = listOfNotNull(n.locality, n.region)
-                                        .joinToString(", ")
+                                    val loc = listOfNotNull(n.locality, n.region).joinToString(", ")
                                     if (loc.isNotBlank()) {
                                         Text(loc, style = MaterialTheme.typography.bodySmall)
                                     }
@@ -289,7 +321,7 @@ private fun MessagesScreen(
                 title = { Text(state.selectedNumber ?: "Messages") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 actions = {

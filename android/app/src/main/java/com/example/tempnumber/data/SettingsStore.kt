@@ -9,30 +9,41 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "settings")
 
-data class Settings(val baseUrl: String = "", val apiKey: String = "")
+/** A persisted session: backend URL plus the bearer token issued at login. */
+data class Session(
+    val baseUrl: String = "",
+    val token: String = "",
+    val email: String = "",
+)
 
 /**
- * Stores the backend base URL and app API key.
- *
- * Note: Preferences DataStore is not encrypted at rest. The API key here grants
- * access to numbers the backend tracks, not to anyone else's SMS. For stronger
- * protection, back this with EncryptedSharedPreferences or the Keystore.
+ * Note: Preferences DataStore is not encrypted at rest. The token grants access
+ * only to the signed-in user's own numbers. For stronger protection, back this
+ * with EncryptedSharedPreferences or store the token in the Keystore.
  */
 class SettingsStore(private val context: Context) {
     private val baseUrlKey = stringPreferencesKey("base_url")
-    private val apiKeyKey = stringPreferencesKey("api_key")
+    private val tokenKey = stringPreferencesKey("token")
+    private val emailKey = stringPreferencesKey("email")
 
-    val settings: Flow<Settings> = context.dataStore.data.map { prefs ->
-        Settings(
+    val session: Flow<Session> = context.dataStore.data.map { prefs ->
+        Session(
             baseUrl = prefs[baseUrlKey] ?: "",
-            apiKey = prefs[apiKeyKey] ?: "",
+            token = prefs[tokenKey] ?: "",
+            email = prefs[emailKey] ?: "",
         )
     }
 
-    suspend fun save(baseUrl: String, apiKey: String) {
+    suspend fun saveSession(baseUrl: String, token: String, email: String) {
         context.dataStore.edit { prefs ->
             prefs[baseUrlKey] = baseUrl.trim()
-            prefs[apiKeyKey] = apiKey.trim()
+            prefs[tokenKey] = token
+            prefs[emailKey] = email.trim()
         }
+    }
+
+    /** Remembers the backend URL but drops the token (logout). */
+    suspend fun clearToken() {
+        context.dataStore.edit { prefs -> prefs.remove(tokenKey) }
     }
 }

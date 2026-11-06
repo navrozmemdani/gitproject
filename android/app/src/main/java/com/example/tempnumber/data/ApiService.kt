@@ -3,11 +3,26 @@ package com.example.tempnumber.data
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    // --- Auth (no bearer token needed) ---
+    @POST("api/auth/register")
+    suspend fun register(
+        @Header("X-Signup-Key") signupKey: String,
+        @Body body: RegisterRequest,
+    ): AuthResponse
+
+    @POST("api/auth/login")
+    suspend fun login(@Body body: LoginRequest): AuthResponse
+
+    // --- Authenticated ---
+    @POST("api/logout")
+    suspend fun logout()
+
     @GET("api/available-numbers")
     suspend fun availableNumbers(
         @Query("country") country: String = "US",

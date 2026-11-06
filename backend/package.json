@@ -1,0 +1,20 @@
+{
+  "name": "tempnumber-backend",
+  "version": "0.1.0",
+  "description": "Backend for the Temp Number app: receives Twilio SMS webhooks and serves them to the Android client over an authenticated API.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "twilio": "^5.3.0"
+  }
+}
